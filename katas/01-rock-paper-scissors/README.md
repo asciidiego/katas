@@ -1,8 +1,20 @@
-# Rock Paper Scissors		
+# Rock Paper Scissors
 
 The classical rock-papers-scissors game.
 
+## Building the game
+
+To build the game, run `npm run build`. This will build the javascript files
+using the typescript transpiler. The `js` files will be found inside the
+`typescript-output` directory.
+
+## Running the tests
+
+The game designated test runner is `jest`. To execute tests, run `npm test`.
+If you want to enable watch mode, run `npm test -- --watch`.
+
 ## Requirements
+
 The kata is completed if it passes the following minimum acceptance tests:
 
 > It has a Player vs computer mode.
@@ -17,11 +29,12 @@ Instead, both player choices/movements/weapons are auto selected. You can see
 their accumulated scores in the game and each round.
 
 > In-memory game state management.
-This means that, as you play, you should be able to see basic game metrics.
-For example, number of victories, games played until date, or a win/lose ratio
-(similar to KDA in other games).
+> This means that, as you play, you should be able to see basic game metrics.
+> For example, number of victories, games played until date, or a win/lose ratio
+> (similar to KDA in other games).
 
 ### Bonus Points
+
 The following is a non-exhaustive list of tasks or indicators of a higher
 quality implementation.
 
@@ -39,19 +52,23 @@ quality implementation.
   you use a particular pattern, e.g. strategy; or an architectural principle,
   such as the open-closed principle of the SOLID principles.
 
-
 ## Programming muscles trained
 
 This kata trains the following programming muscles:
 
 - Polymorphism. The core of object oriented programming
   - Useful to create new types without much trouble. Unlike data structures,
-  polymorphism and objects are great to add additional types that implement
-  existing functionality in a decoupled way. The holy grail of many
-  programming projects. Since we have different weapons (rock, paper, and
-  scissors), polymorphism *may* be useful to implement the different aspects
-  of weapons.
+    polymorphism and objects are great to add additional types that implement
+    existing functionality in a decoupled way. The holy grail of many
+    programming projects. Since we have different weapons (rock, paper, and
+    scissors), polymorphism _may_ be useful to implement the different aspects
+    of weapons.
 - Basic data structures. Such as maps and arrays.
 - Functional programming higher-order functions.
- - Depending on the implementation, `map`, `filter`, and `reduce` can all be
- great assets while creating the game.
+- Depending on the implementation, `map`, `filter`, and `reduce` can all be
+  great assets while creating the game.
+
+## Pending
+
+- [ ] Exclude specification files when building JS files (optimizing bundling).
+- [ ] Include linter and linting script
