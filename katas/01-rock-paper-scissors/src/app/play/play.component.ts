@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Weapon } from '@game';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { GameService } from '../game.service';
 
 @Component({
@@ -10,21 +9,16 @@ import { GameService } from '../game.service';
   styleUrls: ['./play.component.scss'],
 })
 export class PlayComponent implements OnInit {
-  weapons$: Observable<Weapon[]>;
+  // These can come from a Presenter object (again, Angular agnostic :-) )
+  weapons$;
   gameState$;
-  // TODO: Can be refactored into presenter object
-  scores$: Observable<{ player1: string; player2: string }>;
+  scores$;
 
   constructor(private gameService: GameService) {
     // TODO: Refactor into presenter to be able to change weapon display names
-    this.weapons$ = this.gameService.weapons$.pipe();
+    this.weapons$ = this.gameService.weapons$;
     this.gameState$ = this.gameService.state$;
-    this.scores$ = this.gameService.scores$.pipe(
-      map(({ player1: p1Score, player2: p2Score }) => ({
-        player1: p1Score.toString(),
-        player2: p2Score.toString(),
-      }))
-    );
+    this.scores$ = this.gameService.scores$;
   }
 
   play(weapon: Weapon) {
