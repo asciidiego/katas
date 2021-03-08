@@ -3,16 +3,6 @@
  */
 
 /**
- * Main game rules
- */
-export interface GameRules {
-    /**
-     * weapon game rules
-     */
-    weaponRules: WeaponRules;
-}
-
-/**
  * Rules that assign which weapon wins against which other weapon
  */
 export interface WeaponRules {

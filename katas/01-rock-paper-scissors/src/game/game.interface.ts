@@ -7,6 +7,12 @@ export interface Game {
    * @param turn game turn
    */
   evaluateMatch(turn: GameTurn): GameOutcome;
+  /**
+   * Select a game mode
+   *
+   * @param mode game mode
+   */
+  pickMode(mode: string): void;
 }
 
 export interface GameOutcome {

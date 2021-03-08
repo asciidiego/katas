@@ -7,6 +7,7 @@ import { Player } from "./player.interface";
  * Concrete implementation of a standard rock-paper-scissors game.
  */
 export class StandardGame implements Game {
+  mode = "";
   constructor(private engine: MatchEngine) {}
   evaluateMatch(gameTurn: GameTurn): GameOutcome {
     // IDEA: more than two players?
@@ -28,5 +29,10 @@ export class StandardGame implements Game {
         type: "winning",
         winningPlayer: p2.player.id,
       };
+  }
+
+  pickMode(mode: string) {
+    console.log(`Selecting mode -> ${mode}`);
+    this.mode = mode;
   }
 }

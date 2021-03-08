@@ -6,16 +6,13 @@ import {
   MatchEngine,
   Player,
   StandardGame,
-  StandardMatchEngine,
+  StandardMatchEngine
 } from "@game";
 
 const weaponRules = {
   rock: "scissors",
   paper: "rock",
   scissors: "paper",
-};
-const gameRules = {
-  weaponRules: weaponRules,
 };
 const nullLogger: Logger = { log: () => 0 };
 const matchEngine: MatchEngine = new StandardMatchEngine(
