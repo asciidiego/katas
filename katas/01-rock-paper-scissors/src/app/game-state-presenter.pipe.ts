@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GameOutcome } from '@game';
 
 @Pipe({
   name: 'gameStatePresenter',

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   Game,
-  GameOutcome,
   GameTurn,
   MatchEngine,
   StandardGame,
@@ -12,6 +11,9 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+/**
+ * @todo develop / refactor scoring system in core (i.e. `@game`)
+ */
 interface PlayerScores {
   player1: number;
   player2: number;
