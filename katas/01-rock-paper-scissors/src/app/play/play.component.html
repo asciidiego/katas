@@ -1,0 +1,31 @@
+<div class="h-full flex flex-col">
+  <div
+    class="flex text-left m-2 justify-evenly"
+    *ngIf="scores$ | async as scores"
+  >
+    <p class="text-xl uppercase font-bold">
+      You: <span>{{ scores.player1 }}</span>
+    </p>
+    <p class="text-xl uppercase font-bold">
+      AI: <span>{{ scores.player2 }}</span>
+    </p>
+  </div>
+  <div id="last-state" class="uppercase font-sm font-bold">
+    <p>{{ gameState$ | async | gameStatePresenter }}</p>
+  </div>
+  <div class="flex-1 grid place-content-center">
+    <p class="text-lg uppercase font-bold my-4 text-gray-500">
+      Pick your weapon
+    </p>
+
+    <!-- TODO: Use presenter to display name FROM id -- decoupling
+        presentational logic from business logic -->
+    <p
+      class="text-lg uppercase font-bold my-4"
+      *ngFor="let weapon of weapons$ | async"
+      (click)="play(weapon)"
+    >
+      {{ weapon.id }}
+    </p>
+  </div>
+</div>

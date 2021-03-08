@@ -4,6 +4,7 @@ import { Weapon } from "./weapon.interface";
  * Game engine
  */
 export interface MatchEngine {
+    weapons: Weapon[];
     /**
      * Return the identifier of the winning weapon in a two-way match.
      */

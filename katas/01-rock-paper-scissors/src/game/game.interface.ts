@@ -1,5 +1,6 @@
-import { GameTurn } from "./game-turn.interface";
-import { Player } from "./player.interface";
+import { GameTurn } from './game-turn.interface';
+import { Player } from './player.interface';
+import { Weapon } from './weapon.interface';
 
 export interface Game {
   /**
@@ -13,9 +14,14 @@ export interface Game {
    * @param mode game mode
    */
   pickMode(mode: string): void;
+
+  /**
+   * Return a list of available weapons
+   */
+  getWeaponList(): Weapon[];
 }
 
 export interface GameOutcome {
-  type: "winning" | "draw";
-  winningPlayer?: Player["id"];
+  type: 'winning' | 'draw';
+  winningPlayer?: Player['id'];
 }
