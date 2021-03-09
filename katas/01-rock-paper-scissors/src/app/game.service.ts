@@ -8,8 +8,8 @@ import {
   Weapon,
   WeaponRules,
 } from '@game';
-import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { delay, filter, map, tap } from 'rxjs/operators';
 
 /**
  * @todo develop / refactor scoring system in core (i.e. `@game`)
@@ -26,7 +26,7 @@ export class GameService {
   private readonly _engine: MatchEngine;
   private readonly _gameInstance: Game;
   private readonly gameModeSubject = new BehaviorSubject('');
-  private readonly gameStateSubject = new BehaviorSubject('start');
+  private readonly gameStateSubject = new BehaviorSubject('ready');
 
   /**
    * @todo can be refactored to use better data structure
@@ -78,32 +78,71 @@ export class GameService {
   }
 
   playMatchAgainstAI(weapon: Weapon) {
-    const totalWeapons = this.weaponsSubject.value.length;
+    const _delay = 500;
 
-    // TODO: Refactor business logic outside of the application to inner / core layers
-    const randomWeaponIndex = Math.floor(Math.random() * totalWeapons);
-    const randomWeapon = this._gameInstance.getWeaponList()[randomWeaponIndex];
-    const turn: GameTurn = {
-      playerMoves: [
-        { player: { id: 'player1' }, weapon: weapon },
-        { player: { id: 'player2' }, weapon: randomWeapon },
-      ],
-    };
-    const outcome = this._gameInstance.evaluateMatch(turn);
-    if (outcome.type === 'winning' && outcome.winningPlayer) {
-      // TODO: Create types to avoid type casting
-      const winner = outcome.winningPlayer as 'player1' | 'player2';
-      const scores = this.scoresSubject.value;
-      const newScores: GameService['scoresSubject']['value'] = {
-        ...scores,
-        [winner]: ++scores[winner],
-      };
-      this.scoresSubject.next(newScores);
-      this.gameStateSubject.next(`${winner}-win`);
-    } else {
-      this.gameStateSubject.next('draw');
-    }
+    // animation simulator... presentational logic could be done in presenter,
+    // in a core animation layer or in the component itself.
+    const intro$ = of(1).pipe(
+      tap(() => this.gameStateSubject.next('rock')),
+      delay(_delay),
+      tap(() => this.gameStateSubject.next('paper')),
+      delay(_delay),
+      tap(() => this.gameStateSubject.next('scissors')),
+      delay(_delay),
+      tap(() => this.gameStateSubject.next('3')),
+      delay(_delay),
+      tap(() => this.gameStateSubject.next('2')),
+      delay(_delay),
+      tap(() => this.gameStateSubject.next('1')),
+      delay(_delay),
+      tap(() => this.gameStateSubject.next('go!')),
+      delay(_delay)
+    );
+    return intro$.pipe(
+      map(() => {
+        const totalWeapons = this.weaponsSubject.value.length;
 
-    return outcome;
+        // TODO: Refactor business logic outside of the application to inner / core layers
+        const randomWeaponIndex = Math.floor(Math.random() * totalWeapons);
+        // Weapon chosen by AI
+        const randomWeapon = this._gameInstance.getWeaponList()[
+          randomWeaponIndex
+        ];
+        const turn: GameTurn = {
+          playerMoves: [
+            { player: { id: 'player1' }, weapon: weapon },
+            { player: { id: 'player2' }, weapon: randomWeapon },
+          ],
+        };
+        return { turn, weapon: randomWeapon };
+      }),
+      map((gameData) => ({
+        ...gameData,
+        outcome: this._gameInstance.evaluateMatch(gameData.turn),
+      })),
+      tap(({ turn }) =>
+        this.gameStateSubject.next(
+          `${turn.playerMoves[0].weapon.label} vs ${turn.playerMoves[1].weapon.label}`
+        )
+      ),
+      delay(2000),
+      tap(({ outcome }) => {
+        if (outcome.type === 'winning' && outcome.winningPlayer) {
+          // TODO: Create types to avoid type casting
+          const winner = outcome.winningPlayer as 'player1' | 'player2';
+          const scores = this.scoresSubject.value;
+          const newScores: GameService['scoresSubject']['value'] = {
+            ...scores,
+            [winner]: ++scores[winner],
+          };
+          this.scoresSubject.next(newScores);
+          this.gameStateSubject.next(`${winner}-win`);
+        } else {
+          this.gameStateSubject.next('draw');
+        }
+      }),
+      delay(2000),
+      tap(() => this.gameStateSubject.next('ready'))
+    );
   }
 }

@@ -14,18 +14,22 @@
     <p>{{ gameState$ | async | gameStatePresenter }}</p>
   </div>
   <div class="flex-1 grid place-content-center">
-    <p class="text-lg uppercase font-bold my-4 text-gray-500">
+    <p
+      class="text-lg uppercase font-bold my-4 text-gray-500"
+      [ngClass]="{ 'animate-bounce': (gameState$ | async) === 'ready' }"
+    >
       Pick your weapon
     </p>
 
     <!-- TODO: Use presenter to display name FROM id -- decoupling
         presentational logic from business logic -->
-    <p
-      class="text-lg uppercase font-bold my-4"
+    <button
+      class="text-lg uppercase font-bold my-4 disabled:opacity-20"
+      [disabled]="(gameState$ | async) !== 'ready'"
       *ngFor="let weapon of weapons$ | async"
       (click)="play(weapon)"
     >
-      {{ weapon.id }}
-    </p>
+      {{ weapon.label }}
+    </button>
   </div>
 </div>

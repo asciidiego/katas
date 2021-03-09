@@ -8,8 +8,18 @@ export class StandardMatchEngine implements MatchEngine {
     private readonly weaponRules: WeaponRules,
     private logger: Logger = new SuperSimpleLogger()
   ) {
+    // TODO: Display labels must be in presenter
+    // REFACTOR: To other files. In fact, it can be configuration logic.
+    const displayMap: Record<string, string> = {
+      rock: 'Rock 🗿',
+      paper: 'Paper 📄',
+      scissors: 'Scissors ✂️',
+    };
+    const getLabel = (weaponId: string): string =>
+      displayMap[weaponId] || weaponId;
+
     this.weapons = Object.keys(weaponRules).map(
-      (weaponKey): Weapon => ({ id: weaponKey })
+      (weaponKey): Weapon => ({ id: weaponKey, label: getLabel(weaponKey) })
     );
   }
   /**
