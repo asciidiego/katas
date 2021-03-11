@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   Game,
   GameTurn,
+  getRandomWeapon,
   MatchEngine,
   StandardGame,
   StandardMatchEngine,
@@ -62,7 +63,9 @@ export class GameService {
    */
   readonly weapons$ = this.weaponsSubject.asObservable();
 
-  constructor(private readonly configurationService: FeatureFlagConfigurationService) {
+  constructor(
+    private readonly configurationService: FeatureFlagConfigurationService
+  ) {
     const weaponRules: WeaponRules = {
       rock: 'scissors',
       paper: 'rock',
@@ -126,14 +129,7 @@ export class GameService {
 
     return intro$.pipe(
       map(() => {
-        const totalWeapons = this.weaponsSubject.value.length;
-
-        // TODO: Refactor business logic outside of the application to inner / core layers
-        const randomWeaponIndex = Math.floor(Math.random() * totalWeapons);
-        // Weapon chosen by AI
-        const randomWeapon = this._gameInstance.getWeaponList()[
-          randomWeaponIndex
-        ];
+        const randomWeapon = getRandomWeapon(this._gameInstance);
         const turn: GameTurn = {
           playerMoves: [
             { player: { id: 'player1' }, weapon: weapon },
