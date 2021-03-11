@@ -82,6 +82,7 @@ export class GameService {
 
     // animation simulator... presentational logic could be done in presenter,
     // in a core animation layer or in the component itself.
+    // TODO: Feature flag for animation
     const intro$ = of(1).pipe(
       tap(() => this.gameStateSubject.next('rock')),
       delay(_delay),
@@ -98,6 +99,7 @@ export class GameService {
       tap(() => this.gameStateSubject.next('go!')),
       delay(_delay)
     );
+
     return intro$.pipe(
       map(() => {
         const totalWeapons = this.weaponsSubject.value.length;
