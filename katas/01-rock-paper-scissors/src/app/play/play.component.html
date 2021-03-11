@@ -25,11 +25,28 @@
         presentational logic from business logic -->
     <button
       class="text-lg uppercase font-bold my-4 disabled:opacity-20"
-      [disabled]="(gameState$ | async) !== 'ready'"
       *ngFor="let weapon of weapons$ | async"
+      [disabled]="(gameState$ | async) !== 'ready'"
       (click)="play(weapon)"
     >
       {{ weapon.label }}
+    </button>
+  </div>
+
+  <!-- If the number of RxJS subscriptions from the async pipe number is high,
+       we can use the *ngIf trick to reduce it 
+  -->
+  <div>
+    <button
+      class="font-bold disabled:text-gray-300"
+      [ngClass]="{ 'text-gray-400': _areAnimationsEnabled$() | async }"
+      (click)="_toggleAnimations()"
+    >
+      {{
+        (_areAnimationsEnabled$() | async)
+          ? "Disable animations"
+          : "Enable animations"
+      }}
     </button>
   </div>
 </div>

@@ -10,7 +10,7 @@ if (environment.production) {
 }
 
 const featureFlagsProvider = {
-  provide: 'INITIAL_STORE',
+  provide: 'FEATURE_FLAGS',
   useValue: { ANIMATION_ENABLED: false } as FEATURE_FLAGS,
 };
 const providers = [featureFlagsProvider];

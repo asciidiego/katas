@@ -10,7 +10,7 @@ import {
 } from '@game';
 import { BehaviorSubject, of } from 'rxjs';
 import { delay, filter, map, tap } from 'rxjs/operators';
-import { ConfigService } from './config/config.service';
+import { FeatureFlagConfigurationService } from './config/feature-flags.service';
 
 /**
  * @todo develop / refactor scoring system in core (i.e. `@game`)
@@ -62,7 +62,7 @@ export class GameService {
    */
   readonly weapons$ = this.weaponsSubject.asObservable();
 
-  constructor(private readonly configurationService: ConfigService) {
+  constructor(private readonly configurationService: FeatureFlagConfigurationService) {
     const weaponRules: WeaponRules = {
       rock: 'scissors',
       paper: 'rock',
