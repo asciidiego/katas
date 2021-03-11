@@ -1,5 +1,5 @@
 # Standard rock-paper-scissors rules configuration file
-# 
+# TODO: Get the weapons from .rules files
 rock beats scissors
 scissors beats paper
 paer beats rock

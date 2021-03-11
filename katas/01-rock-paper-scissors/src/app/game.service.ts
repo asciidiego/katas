@@ -28,6 +28,15 @@ export class GameService {
   private readonly _engine: MatchEngine;
   private readonly _gameInstance: Game;
   private readonly gameModeSubject = new BehaviorSubject('');
+  /**
+   * Reflects current state of the game. It can be one of
+   * 
+   *   - ready
+   *   - draw
+   *   - player1-win
+   *   - player2-win
+   *   - Weapon (label) vs Weapon (label) ex-> "rock vs rock"
+   */
   private readonly gameStateSubject = new BehaviorSubject('ready');
 
   /**
@@ -86,6 +95,11 @@ export class GameService {
     this.gameModeSubject.next(mode);
   }
 
+  spectateMatch() {
+    const p1Weapon = getRandomWeapon(this._gameInstance);
+    return this.playMatchAgainstAI(p1Weapon);
+  }
+
   playMatchAgainstAI(weapon: Weapon) {
     const _delay = 500;
 
@@ -113,8 +127,9 @@ export class GameService {
     // TODO: animation feature flag
     const isAnimated = this.configurationService.get('ANIMATION_ENABLED');
     console.log(isAnimated);
+    const event$ = of(dummyEvent).pipe(delay(_delay));
     const intro$ = isAnimated
-      ? of(dummyEvent).pipe(
+      ? event$.pipe(
           tap(() => this.gameStateSubject.next('rock')),
           delay(_delay),
           tap(() => this.gameStateSubject.next('paper')),
@@ -130,7 +145,7 @@ export class GameService {
           tap(() => this.gameStateSubject.next('go!')),
           delay(_delay)
         )
-      : of(dummyEvent);
+      : event$;
 
     return intro$.pipe(
       map(() => {

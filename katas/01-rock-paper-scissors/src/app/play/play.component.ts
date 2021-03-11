@@ -1,12 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Weapon } from '@game';
-import { interval, Observable } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import {
+  combineLatest,
+  iif,
+  interval,
+  merge,
+  Observable,
+  of,
+  Subscription,
+} from 'rxjs';
+import { filter, map, mergeMap, takeWhile, tap } from 'rxjs/operators';
 import { FeatureFlagConfigurationService } from '../config/feature-flags.service';
 import { GameService } from '../game.service';
-
-const logGameState = (state: unknown) => console.log('state update ->', state);
 
 @Component({
   selector: 'app-play',
@@ -19,17 +25,35 @@ export class PlayComponent implements OnDestroy {
   gameState$: Observable<string>;
   scores$;
 
+  private _spectatorSubscription: Subscription;
+
   constructor(
     public configurationService: FeatureFlagConfigurationService,
-    private gameService: GameService
+    private gameService: GameService,
+    private route: ActivatedRoute
   ) {
-    // TODO: Refactor into presenter to easily change presentation logic
-    //         - Can be enhanced with Angular Pipes
+    // TODO: Refactor presentation state into presenter to easily change
+    //       presentation logic - Can be enhanced with Angular Pipes
     this.weapons$ = this.gameService.weapons$;
-    this.gameState$ = this.gameService.state$.pipe(
-      tap(logGameState)
-    ) as Observable<string>;
+    this.gameState$ = this.gameService.state$;
     this.scores$ = this.gameService.scores$;
+
+    /**
+     * Plays a match each interval reactively. Only plays if spectator mode is
+     * enabled and all the animations have finished.
+     */
+    const spectatorMode$ = combineLatest([
+      interval(1000),
+      this.route.queryParams,
+      this.gameState$,
+    ]).pipe(
+      filter(([, { mode }, state]) => mode === 'cvc' && state === 'ready'),
+      mergeMap(() => this.gameService.spectateMatch())
+    );
+    
+    // Potential improvement: separate into two play components.
+    // As time passes, both components they will evolve for different reasons.
+    this._spectatorSubscription = spectatorMode$.subscribe();
   }
 
   /**
@@ -39,10 +63,9 @@ export class PlayComponent implements OnDestroy {
    */
   play(weapon: Weapon) {
     // TODO: change behavior depending on route param (AI vs AI mode)
-    // const w: Weapon = {id: 'rock', label: 'piedra'};
-    // interval(1000).pipe(
-    //   mergeMap(i => this.gameService.playMatchAgainstAI(weapon))
-    // ).subscribe();
+    // interval(1000)
+    //   .pipe(mergeMap((i) => this.gameService.playMatchAgainstAI(weapon)))
+    //   .subscribe();
 
     // A great idea for refactoring is using functional reactive programming.
     // Using rxjs helpers such as fromEvent, we can create a functional-approach
@@ -72,6 +95,7 @@ export class PlayComponent implements OnDestroy {
   ngOnDestroy() {
     console.log('Destroying battlefield...');
     this.gameService.tearDown();
+    this._spectatorSubscription.unsubscribe();
   }
 }
 
