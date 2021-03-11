@@ -10,6 +10,7 @@ import {
 } from '@game';
 import { BehaviorSubject, of } from 'rxjs';
 import { delay, filter, map, tap } from 'rxjs/operators';
+import { ConfigService } from './config/config.service';
 
 /**
  * @todo develop / refactor scoring system in core (i.e. `@game`)
@@ -61,7 +62,7 @@ export class GameService {
    */
   readonly weapons$ = this.weaponsSubject.asObservable();
 
-  constructor() {
+  constructor(private readonly configurationService: ConfigService) {
     const weaponRules: WeaponRules = {
       rock: 'scissors',
       paper: 'rock',
@@ -80,25 +81,48 @@ export class GameService {
   playMatchAgainstAI(weapon: Weapon) {
     const _delay = 500;
 
-    // animation simulator... presentational logic could be done in presenter,
-    // in a core animation layer or in the component itself.
-    // TODO: Feature flag for animation
-    const intro$ = of(1).pipe(
-      tap(() => this.gameStateSubject.next('rock')),
-      delay(_delay),
-      tap(() => this.gameStateSubject.next('paper')),
-      delay(_delay),
-      tap(() => this.gameStateSubject.next('scissors')),
-      delay(_delay),
-      tap(() => this.gameStateSubject.next('3')),
-      delay(_delay),
-      tap(() => this.gameStateSubject.next('2')),
-      delay(_delay),
-      tap(() => this.gameStateSubject.next('1')),
-      delay(_delay),
-      tap(() => this.gameStateSubject.next('go!')),
-      delay(_delay)
-    );
+    // quick/drafty animation simulator!
+
+    // The presentational logic could be done in presenter, in a core animation
+    // layer or in the component itself. TODO: Feature flag for animation This
+    // can be refactored into a presentational stateless function that generates
+    // RxJS operators given a text input such as
+    //
+    // ['rock', 'paper', {delay: 2000, value: 'Scissors!'}]
+    //
+    // But for the demonstration, this should be enough. Not because of
+    // laziness, but because at the start of a project it makes sense to follow
+    // the Single Responsibility Principle and the Common Closure Principle
+    // (component level). As the project matures, we can start to reuse logic as
+    // we know more about our business domain.
+
+    /**
+     * This is where a mouse event can become useful!
+     *
+     * @see `fromEvent` from RxJS.
+     */
+    const dummyEvent = 1;
+    // TODO: animation feature flag
+    const isAnimated = this.configurationService.get('ANIMATION_ENABLED');
+    console.log(isAnimated);
+    const intro$ = isAnimated
+      ? of(dummyEvent).pipe(
+          tap(() => this.gameStateSubject.next('rock')),
+          delay(_delay),
+          tap(() => this.gameStateSubject.next('paper')),
+          delay(_delay),
+          tap(() => this.gameStateSubject.next('scissors')),
+          delay(_delay),
+          tap(() => this.gameStateSubject.next('3')),
+          delay(_delay),
+          tap(() => this.gameStateSubject.next('2')),
+          delay(_delay),
+          tap(() => this.gameStateSubject.next('1')),
+          delay(_delay),
+          tap(() => this.gameStateSubject.next('go!')),
+          delay(_delay)
+        )
+      : of(dummyEvent);
 
     return intro$.pipe(
       map(() => {
