@@ -63,6 +63,11 @@ export class GameService {
    */
   readonly weapons$ = this.weaponsSubject.asObservable();
 
+  tearDown() {
+    this.gameStateSubject.next('ready');
+    this.scoresSubject.next({ player1: 0, player2: 0 });
+  }
+
   constructor(
     private readonly configurationService: FeatureFlagConfigurationService
   ) {

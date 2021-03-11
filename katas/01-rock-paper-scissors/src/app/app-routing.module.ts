@@ -10,7 +10,7 @@ const routes: Route[] = [
     component: MainMenuComponent,
   },
   {
-    path: 'player-vs-computer',
+    path: 'play',
     component: PlayComponent,
   },
   {

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Weapon } from '@game';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { interval, Observable } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
 import { FeatureFlagConfigurationService } from '../config/feature-flags.service';
 import { GameService } from '../game.service';
 
@@ -12,7 +13,7 @@ const logGameState = (state: unknown) => console.log('state update ->', state);
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss'],
 })
-export class PlayComponent {
+export class PlayComponent implements OnDestroy {
   // These can come from a Presenter object (again, Angular agnostic :-) )
   weapons$;
   gameState$: Observable<string>;
@@ -37,6 +38,12 @@ export class PlayComponent {
    * @param weapon main player picked weapon
    */
   play(weapon: Weapon) {
+    // TODO: change behavior depending on route param (AI vs AI mode)
+    // const w: Weapon = {id: 'rock', label: 'piedra'};
+    // interval(1000).pipe(
+    //   mergeMap(i => this.gameService.playMatchAgainstAI(weapon))
+    // ).subscribe();
+
     // A great idea for refactoring is using functional reactive programming.
     // Using rxjs helpers such as fromEvent, we can create a functional-approach
     // to the UI. If necessary, this can be empowered by using the Redux pattern
@@ -60,6 +67,11 @@ export class PlayComponent {
 
   _areAnimationsEnabled$() {
     return this.configurationService.get$('ANIMATION_ENABLED');
+  }
+
+  ngOnDestroy() {
+    console.log('Destroying battlefield...');
+    this.gameService.tearDown();
   }
 }
 

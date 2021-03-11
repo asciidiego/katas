@@ -7,14 +7,10 @@ import { GameService } from '../game.service';
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],
 })
-export class MainMenuComponent implements OnInit {
-  constructor(private gameService: GameService, private router: Router) {}
-  pickMode = (mode: string) => this.gameService.pickMode(mode);
-  ngOnInit(): void {
-    this.gameService.mode$.subscribe((mode) => {
-      this.router.navigate(['player-vs-computer'], {
-        queryParams: { mode },
-      });
+export class MainMenuComponent {
+  constructor(private router: Router) {}
+  pickMode = (mode: string) =>
+    this.router.navigate(['play'], {
+      queryParams: { mode },
     });
-  }
 }
