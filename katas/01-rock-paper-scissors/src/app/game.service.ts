@@ -13,9 +13,6 @@ import { BehaviorSubject, of } from 'rxjs';
 import { delay, filter, map, tap } from 'rxjs/operators';
 import { FeatureFlagConfigurationService } from './config/feature-flags.service';
 
-/**
- * @todo develop / refactor scoring system in core (i.e. `@game`)
- */
 interface PlayerScores {
   player1: number;
   player2: number;
@@ -30,7 +27,7 @@ export class GameService {
   private readonly gameModeSubject = new BehaviorSubject('');
   /**
    * Reflects current state of the game. It can be one of
-   * 
+   *
    *   - ready
    *   - draw
    *   - player1-win
@@ -40,8 +37,9 @@ export class GameService {
   private readonly gameStateSubject = new BehaviorSubject('ready');
 
   /**
-   * @todo can be refactored to use better data structure
-   * @todo move into core layers
+   * This could be refactored into core layers, but it depends on the
+   * requirements. Since this is a basic prototype, I use a simple
+   * subject in the application layer.
    */
   private readonly scoresSubject = new BehaviorSubject<PlayerScores>({
     player1: 0,
@@ -106,9 +104,9 @@ export class GameService {
     // quick/drafty animation simulator!
 
     // The presentational logic could be done in presenter, in a core animation
-    // layer or in the component itself. TODO: Feature flag for animation This
-    // can be refactored into a presentational stateless function that generates
-    // RxJS operators given a text input such as
+    // layer or in the component itself. This can be refactored into a
+    // presentational stateless function that generates RxJS operators given a
+    // text input such as...
     //
     // ['rock', 'paper', {delay: 2000, value: 'Scissors!'}]
     //
@@ -119,12 +117,11 @@ export class GameService {
     // we know more about our business domain.
 
     /**
-     * This is where a mouse event can become useful!
+     * This is where a mouse event can become useful. 
      *
      * @see `fromEvent` from RxJS.
      */
     const dummyEvent = 1;
-    // TODO: animation feature flag
     const isAnimated = this.configurationService.get('ANIMATION_ENABLED');
     console.log(isAnimated);
     const event$ = of(dummyEvent).pipe(delay(_delay));
