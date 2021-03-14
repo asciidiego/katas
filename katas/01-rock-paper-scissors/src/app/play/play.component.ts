@@ -26,8 +26,6 @@ export class PlayComponent implements OnDestroy, OnInit {
     private gameService: GameService,
     private route: ActivatedRoute
   ) {
-    // TODO: Refactor presentation state into presenter to easily change
-    //       presentation logic - Can be enhanced with Angular Pipes
     this.weapons$ = this.gameService.weapons$;
     this.gameState$ = this.gameService.state$;
     this.scores$ = this.gameService.scores$;
@@ -65,11 +63,6 @@ export class PlayComponent implements OnDestroy, OnInit {
    * @param weapon main player picked weapon
    */
   play(weapon: Weapon) {
-    // TODO: change behavior depending on route param (AI vs AI mode)
-    // interval(1000)
-    //   .pipe(mergeMap((i) => this.gameService.playMatchAgainstAI(weapon)))
-    //   .subscribe();
-
     // A great idea for refactoring is using functional reactive programming.
     // Using rxjs helpers such as fromEvent, we can create a functional-approach
     // to the UI. If necessary, this can be empowered by using the Redux pattern

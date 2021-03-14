@@ -6,12 +6,12 @@ import {
   MatchEngine,
   StandardGame,
   StandardMatchEngine,
-  Weapon
+  Weapon,
+  StandardWeaponRules
 } from '@game';
 import { BehaviorSubject, of } from 'rxjs';
 import { delay, filter, map, tap } from 'rxjs/operators';
 import { FeatureFlagConfigurationService } from './config/feature-flags.service';
-import { WEAPON_RULES } from './standard.rules';
 
 interface PlayerScores {
   [player: string]: number;
@@ -77,7 +77,10 @@ export class GameService {
   constructor(
     private readonly configurationService: FeatureFlagConfigurationService
   ) {
-    this._engine = new StandardMatchEngine(WEAPON_RULES);
+    // This can be done through Inversion of Control (e.g. Dependency Inversion)
+    // or in the main file
+    // See -> https://sites.google.com/site/unclebobconsultingllc/blogs-by-robert-martin/dependency-injection-inversion
+    this._engine = new StandardMatchEngine();
     this._gameInstance = new StandardGame(this._engine);
     this.weaponsSubject.next(this._gameInstance.getWeaponList());
   }

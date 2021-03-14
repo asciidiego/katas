@@ -1,6 +1,6 @@
 import { Weapon, WeaponDisplayMap, WeaponRules } from '@game';
 
-export const WEAPON_RULES: WeaponRules = {
+export const StandardWeaponRules: WeaponRules = {
   rock: ['scissors', 'lizard'],
   paper: ['rock', 'spock'],
   scissors: ['paper', 'lizard'],
@@ -8,7 +8,7 @@ export const WEAPON_RULES: WeaponRules = {
   spock: ['scissors', 'rock'],
 };
 
-export const WEAPON_DISPLAY_MAP: WeaponDisplayMap = {
+export const StandardWeaponDisplayMap: WeaponDisplayMap = {
   rock: 'Rock 🗿',
   paper: 'Paper 📄',
   scissors: 'Scissors ✂️',

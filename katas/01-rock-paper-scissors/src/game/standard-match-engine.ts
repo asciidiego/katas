@@ -1,18 +1,18 @@
-import { WEAPON_DISPLAY_MAP } from 'src/app/standard.rules';
 import { MatchEngine } from './match-engine.interface';
-import { WeaponRules } from './rules.interface';
+import {
+  StandardWeaponDisplayMap,
+  StandardWeaponRules
+} from './rules/standard';
 import { Weapon } from './weapon.interface';
 
 export class StandardMatchEngine implements MatchEngine {
   weapons: Weapon[] = [];
-  constructor(
-    private readonly weaponRules: WeaponRules,
-    private logger: Logger = new SuperSimpleLogger()
-  ) {
+  private readonly weaponRules = StandardWeaponRules;
+  constructor(private logger: Logger = new SuperSimpleLogger()) {
     const presentWeapon = (weaponId: string): string =>
-      WEAPON_DISPLAY_MAP[weaponId] || weaponId;
+      StandardWeaponDisplayMap[weaponId] || weaponId;
 
-    this.weapons = Object.keys(weaponRules).map(
+    this.weapons = Object.keys(this.weaponRules).map(
       (weaponKey): Weapon => ({
         id: weaponKey,
         label: presentWeapon(weaponKey),
