@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { GameStatePresenterPipe } from './game-state-presenter.pipe';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { PlayComponent } from './play/play.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { PlayComponent } from './play/play.component';
     MainMenuComponent,
     PlayComponent,
     GameStatePresenterPipe,
+    AboutComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],

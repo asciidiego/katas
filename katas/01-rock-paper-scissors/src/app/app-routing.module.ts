@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { PlayComponent } from './play/play.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Route[] = [
   {
@@ -12,6 +13,10 @@ const routes: Route[] = [
   {
     path: 'play',
     component: PlayComponent,
+  },
+  {
+    path: 'about',
+    component: AboutComponent,
   },
   {
     path: '',
