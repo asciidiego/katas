@@ -121,7 +121,7 @@ export class GameService {
     const dummyEvent = 1;
     const isAnimated = this.configurationService.get('ANIMATION_ENABLED');
     console.log(isAnimated);
-    const event$ = of(dummyEvent);
+    const event$ = of(dummyEvent).pipe(delay(_delay));
     const intro$ = isAnimated
       ? event$.pipe(
           tap(() => this.gameStateSubject.next('rock')),
