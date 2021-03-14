@@ -13,23 +13,27 @@
   <div id="last-state" class="uppercase font-sm font-bold">
     <p>{{ gameState$ | async | gameStatePresenter }}</p>
   </div>
-  <div class="flex-1 grid place-content-center">
-    <div *ngIf="shouldDisplayWeaponChooser$ | async">
+  <div class="flex-1">
+    <div
+      *ngIf="shouldDisplayWeaponChooser$ | async"
+      class="h-full flex flex-col"
+    >
       <p
         class="text-lg uppercase font-bold my-4 text-gray-500"
         [ngClass]="{ 'animate-bounce': (gameState$ | async) === 'ready' }"
       >
         Pick your weapon
       </p>
-
-      <button
-        class="text-lg uppercase font-bold my-4 disabled:opacity-20"
-        *ngFor="let weapon of weapons$ | async"
-        [disabled]="(gameState$ | async) !== 'ready'"
-        (click)="play(weapon)"
-      >
-        {{ weapon.label }}
-      </button>
+      <ul class="flex-1 flex flex-col justify-center">
+        <button
+          class="text-lg uppercase font-bold my-2 disabled:opacity-20"
+          *ngFor="let weapon of weapons$ | async"
+          [disabled]="(gameState$ | async) !== 'ready'"
+          (click)="play(weapon)"
+        >
+          {{ weapon.label }}
+        </button>
+      </ul>
     </div>
   </div>
 

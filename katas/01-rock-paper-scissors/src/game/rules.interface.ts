@@ -10,7 +10,7 @@ export interface WeaponRules {
      * Denotes which weapon beats which other weapon
      *
      * @example
-     * {rock: "scissors"}  // weapon with ID "rock" beats weapon with ID "scissors"
+     * {rock: ["scissors"]}  // weapon with ID "rock" beats weapon with ID "scissors"
      */
-    [weaponIdentifier: string]: string;
+    [weaponIdentifier: string]: string[];
 }

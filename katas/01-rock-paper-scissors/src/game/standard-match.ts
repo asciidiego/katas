@@ -1,3 +1,4 @@
+import { WEAPON_DISPLAY_MAP } from 'src/app/standard.rules';
 import { MatchEngine } from './match-engine.interface';
 import { WeaponRules } from './rules.interface';
 import { Weapon } from './weapon.interface';
@@ -8,18 +9,14 @@ export class StandardMatchEngine implements MatchEngine {
     private readonly weaponRules: WeaponRules,
     private logger: Logger = new SuperSimpleLogger()
   ) {
-    // TODO: Display labels must be in presenter
-    // REFACTOR: To other files. In fact, it can be configuration logic.
-    const displayMap: Record<string, string> = {
-      rock: 'Rock 🗿',
-      paper: 'Paper 📄',
-      scissors: 'Scissors ✂️',
-    };
-    const getLabel = (weaponId: string): string =>
-      displayMap[weaponId] || weaponId;
+    const presentWeapon = (weaponId: string): string =>
+      WEAPON_DISPLAY_MAP[weaponId] || weaponId;
 
     this.weapons = Object.keys(weaponRules).map(
-      (weaponKey): Weapon => ({ id: weaponKey, label: getLabel(weaponKey) })
+      (weaponKey): Weapon => ({
+        id: weaponKey,
+        label: presentWeapon(weaponKey),
+      })
     );
   }
   /**
@@ -29,10 +26,9 @@ export class StandardMatchEngine implements MatchEngine {
    * @param weapon2 weapon object
    */
   evaluateWeapons({ id: w1 }: Weapon, { id: w2 }: Weapon): Weapon['id'] {
+    const winner = this.weaponRules[w1].includes(w2) ? w1 : w2;
+
     this.logger.log(`Evaluating match. W1 -> ${w1}; W2 -> ${w2}`);
-
-    const winner = this.weaponRules[w1] === w2 ? w1 : w2;
-
     this.logger.log(`Winner weapon -> ${winner}`);
 
     return winner;
