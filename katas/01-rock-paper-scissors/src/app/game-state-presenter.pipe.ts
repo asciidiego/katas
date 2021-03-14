@@ -5,7 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class GameStatePresenterPipe implements PipeTransform {
   transform(gameState: string | null): string {
-    console.log(gameState)
     if (!gameState) return '-';
 
     if (gameState === 'draw') return 'That was a tough one... DRAW!';

@@ -1,16 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Weapon } from '@game';
-import {
-  combineLatest,
-  iif,
-  interval,
-  merge,
-  Observable,
-  of,
-  Subscription,
-} from 'rxjs';
-import { filter, map, mergeMap, takeWhile, tap } from 'rxjs/operators';
+import { combineLatest, interval, Observable, Subscription, zip } from 'rxjs';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { FeatureFlagConfigurationService } from '../config/feature-flags.service';
 import { GameService } from '../game.service';
 
@@ -19,13 +11,15 @@ import { GameService } from '../game.service';
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss'],
 })
-export class PlayComponent implements OnDestroy {
+export class PlayComponent implements OnDestroy, OnInit {
   // These can come from a Presenter object (again, Angular agnostic :-) )
   weapons$;
   gameState$: Observable<string>;
   scores$;
 
-  private _spectatorSubscription: Subscription;
+  shouldDisplayWeaponChooser$: Observable<boolean>;
+
+  private _spectatorSubscription!: Subscription;
 
   constructor(
     public configurationService: FeatureFlagConfigurationService,
@@ -37,23 +31,32 @@ export class PlayComponent implements OnDestroy {
     this.weapons$ = this.gameService.weapons$;
     this.gameState$ = this.gameService.state$;
     this.scores$ = this.gameService.scores$;
-
-    /**
-     * Plays a match each interval reactively. Only plays if spectator mode is
-     * enabled and all the animations have finished.
-     */
-    const spectatorMode$ = combineLatest([
-      interval(1000),
-      this.route.queryParams,
-      this.gameState$,
-    ]).pipe(
-      filter(([, { mode }, state]) => mode === 'cvc' && state === 'ready'),
-      mergeMap(() => this.gameService.spectateMatch())
+    this.shouldDisplayWeaponChooser$ = this.route.queryParams.pipe(
+      map(({ mode }) => mode === 'pvc')
     );
-    
-    // Potential improvement: separate into two play components.
-    // As time passes, both components they will evolve for different reasons.
-    this._spectatorSubscription = spectatorMode$.subscribe();
+  }
+
+  ngOnInit() {
+    /**
+     * Trigger a match request each second. But only if the earlier game finished.
+     */
+    const intervalicPlay = zip(interval(1000), this.gameState$);
+    /**
+     * This only emits if the mode is AI vs AI
+     */
+    const autoPlayIfSpectateModeIsOn$ = this.route.queryParams.pipe(
+      filter(({ mode }) => mode === 'cvc')
+    );
+    this._spectatorSubscription = combineLatest([
+      autoPlayIfSpectateModeIsOn$,
+      intervalicPlay,
+    ])
+      .pipe(
+        map(([_queryParams, [_interval, gameState]]) => gameState),
+        filter((state) => state === 'ready'),
+        mergeMap(() => this.gameService.spectateMatch())
+      )
+      .subscribe();
   }
 
   /**
@@ -98,9 +101,3 @@ export class PlayComponent implements OnDestroy {
     this._spectatorSubscription.unsubscribe();
   }
 }
-
-const weaponViewModelMap: Record<string, string> = {
-  scissors: 'Scissors ✂️',
-  rock: 'Rock 🗿',
-  paper: 'Paper 📄',
-};

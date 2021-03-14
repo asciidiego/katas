@@ -14,8 +14,7 @@ import { delay, filter, map, tap } from 'rxjs/operators';
 import { FeatureFlagConfigurationService } from './config/feature-flags.service';
 
 interface PlayerScores {
-  player1: number;
-  player2: number;
+  [player: string]: number;
 }
 
 @Injectable({
@@ -117,14 +116,14 @@ export class GameService {
     // we know more about our business domain.
 
     /**
-     * This is where a mouse event can become useful. 
+     * This is where a mouse event can become useful.
      *
      * @see `fromEvent` from RxJS.
      */
     const dummyEvent = 1;
     const isAnimated = this.configurationService.get('ANIMATION_ENABLED');
     console.log(isAnimated);
-    const event$ = of(dummyEvent).pipe(delay(_delay));
+    const event$ = of(dummyEvent);
     const intro$ = isAnimated
       ? event$.pipe(
           tap(() => this.gameStateSubject.next('rock')),
@@ -167,8 +166,7 @@ export class GameService {
       delay(2000),
       tap(({ outcome }) => {
         if (outcome.type === 'winning' && outcome.winningPlayer) {
-          // TODO: Create types to avoid type casting
-          const winner = outcome.winningPlayer as 'player1' | 'player2';
+          const winner = outcome.winningPlayer;
           const scores = this.scoresSubject.value;
           const newScores: GameService['scoresSubject']['value'] = {
             ...scores,

@@ -14,23 +14,23 @@
     <p>{{ gameState$ | async | gameStatePresenter }}</p>
   </div>
   <div class="flex-1 grid place-content-center">
-    <p
-      class="text-lg uppercase font-bold my-4 text-gray-500"
-      [ngClass]="{ 'animate-bounce': (gameState$ | async) === 'ready' }"
-    >
-      Pick your weapon
-    </p>
+    <div *ngIf="shouldDisplayWeaponChooser$ | async">
+      <p
+        class="text-lg uppercase font-bold my-4 text-gray-500"
+        [ngClass]="{ 'animate-bounce': (gameState$ | async) === 'ready' }"
+      >
+        Pick your weapon
+      </p>
 
-    <!-- TODO: Use presenter to display name FROM id -- decoupling
-        presentational logic from business logic -->
-    <button
-      class="text-lg uppercase font-bold my-4 disabled:opacity-20"
-      *ngFor="let weapon of weapons$ | async"
-      [disabled]="(gameState$ | async) !== 'ready'"
-      (click)="play(weapon)"
-    >
-      {{ weapon.label }}
-    </button>
+      <button
+        class="text-lg uppercase font-bold my-4 disabled:opacity-20"
+        *ngFor="let weapon of weapons$ | async"
+        [disabled]="(gameState$ | async) !== 'ready'"
+        (click)="play(weapon)"
+      >
+        {{ weapon.label }}
+      </button>
+    </div>
   </div>
 
   <!-- If the number of RxJS subscriptions from the async pipe number is high,
@@ -39,7 +39,6 @@
   <div>
     <button
       class="font-bold disabled:text-gray-300"
-      [ngClass]="{ 'text-gray-400': _areAnimationsEnabled$() | async }"
       (click)="_toggleAnimations()"
     >
       {{
