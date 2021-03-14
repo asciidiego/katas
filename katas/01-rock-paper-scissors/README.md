@@ -28,8 +28,7 @@ This is the spectator mode of the game. Here the player does not participate.
 Instead, both player choices/movements/weapons are auto selected. You can see
 their accumulated scores in the game and each round.
 
-> In-memory game state management.
-> This means that, as you play, you should be able to see basic game metrics. For example, number of victories (similar to KDA in other games).
+> In-memory game state management. As you play, you should be able to see basic game metrics. For example, number of victories (similar to KDA in other games). It's okay if they reset after reloading the page
 
 ### Bonus Points
 
