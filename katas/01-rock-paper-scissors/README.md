@@ -1,6 +1,6 @@
 # Rock Paper Scissors
 
-![game screenshots](assets/iphone_5_screenshot.png =320x120)
+![game screenshots](assets/iphone_5_screenshot.png)
 
 The classical rock-papers-scissors game.
 
