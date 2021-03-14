@@ -1,5 +1,7 @@
 # Rock Paper Scissors
 
+![game screenshots](assets/iphone_5_screenshot.png =320x120)
+
 The classical rock-papers-scissors game.
 
 ## Building the game
