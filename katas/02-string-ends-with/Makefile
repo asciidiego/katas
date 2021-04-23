@@ -1,2 +1,2 @@
 test:
-	clj -X main/run
+	clj -M kata.clj

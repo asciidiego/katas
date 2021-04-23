@@ -1,8 +1,9 @@
-(ns main
-  (:require [clojure.test :refer :all]
-            [kata         :refer [solution]]))
+(ns kata
+  (:require [clojure.test :refer :all]))
 
-(deftest basic-tests
+(def solution clojure.string/ends-with?)
+
+(deftest test-words
   (is (= (solution "samurai" "ai") true))
   (is (= (solution "sumo" "omo") false))
   (is (= (solution "ninja" "ja") true))
@@ -18,7 +19,6 @@
   (is (= (solution ":-)" ":-(") false))
   (is (= (solution "!@#$%^&*() :-)" ":-)") true))
   (is (= (solution "abc\n" "abc") false))
-  )
+)
 
-(defn run [opts]
-  (run-all-tests))
+(run-tests 'kata)
